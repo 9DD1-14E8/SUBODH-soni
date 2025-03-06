@@ -1,216 +1,1 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game Page</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #000;
-            color: #fff;
-            text-align: center;
-            margin: 0;
-            padding: 0;
-        }
-        #timer-container {
-            margin-top: 20px;
-            font-size: 24px;
-            background: #F50057;
-            padding: 15px;
-            border-radius: 10px;
-            display: inline-block;
-            position: relative;
-            width: 250px;
-        }
-        #title {
-            position: absolute;
-            top: 5px;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 16px;
-            font-weight: bold;
-            color: white;
-        }
-        #level {
-            position: absolute;
-            bottom: 5px;
-            right: 10px;
-            font-size: 14px;
-            font-weight: bold;
-            color: yellow;
-        }
-        #period-text {
-            font-size: 18px;
-            margin-top: 25px;
-        }
-        #timer {
-            font-size: 24px;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
-        .buttons {
-            margin-top: 40px;
-        }
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 18px;
-            color: white;
-            border-radius: 50px;
-            border: none;
-            cursor: pointer;
-            margin: 10px;
-        }
-        .btn-red { background-color: #FF1744; }
-        .btn-green { background-color: #00C853; }
-        .btn-teal { background-color: #009688; }
-        .btn:disabled {
-            background-color: gray;
-            cursor: not-allowed;
-        }
-        iframe {
-            width: 90%;
-            height: 400px;
-            border: none;
-            margin-top: 20px;
-            border-radius: 10px;
-        }
-    </style>
-</head>
-<body>
-
-    <div id="timer-container">
-        <div id="title">@subodh_soni_100k</div>
-        <div id="level">[ MAX Lv.7 ]</div> 
-        <div id="period-text">Period: Loading...</div>
-        <div id="timer">00 : 00</div>
-    </div>
-
-    <div class="buttons">
-        <button class="btn btn-red" onclick="generateNumber()" id="btn-number">Loading...</button>
-        <button class="btn btn-green" onclick="generateBigSmall()" id="btn-bigsmall">Loading...</button>
-        <button class="btn btn-teal" onclick="openTelegram()">Join Telegram</button>
-    </div>
-
-    <iframe src="https://okwinslots2.com/#/register?invitationCode=3668110536053"></iframe>
-
-    <script>
-        let lastPeriod = "";
-        let activateDateTime = "2025-03-10 12:00"; // **Activate Date & Time (YYYY-MM-DD HH:MM)**
-        let expiryDateTime = "2025-03-14 10:00"; // **Expiry Date & Time**
-        let lastGeneratedNumber = null;
-        let lastGeneratedBigSmall = null;
-        let isActivated = false;
-        let expired = false;
-
-        function updateTimer() {
-            let now = new Date();
-            let seconds = now.getUTCSeconds();
-            let remainingSeconds = 60 - seconds;
-            let minutes = now.getUTCHours() * 60 + now.getUTCMinutes();
-
-            let period = new Date().toISOString().slice(0, 10).replace(/-/g, '') + (10001 + minutes);
-            document.getElementById("period-text").innerText = "Period: " + period;
-            document.getElementById("timer").innerText = `00 : ${remainingSeconds.toString().padStart(2, '0')}`;
-
-            if (lastPeriod !== period) {
-                lastPeriod = period;
-                lastGeneratedNumber = null; 
-                lastGeneratedBigSmall = null;
-            }
-
-            checkActivation();
-            checkExpiry();
-        }
-
-        function checkActivation() {
-            let now = new Date();
-            let activateTime = new Date(activateDateTime);
-            let expiry = new Date(expiryDateTime);
-
-            let btnNumber = document.getElementById("btn-number");
-            let btnBigSmall = document.getElementById("btn-bigsmall");
-
-            if (now < activateTime) {
-                let timeDiff = activateTime - now;
-                let hh = Math.floor(timeDiff / (1000 * 60 * 60));
-                let mm = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-                let ss = Math.floor((timeDiff % (1000 * 60)) / 1000);
-
-                btnNumber.innerText = `Not Active Yet! (${hh}:${mm}:${ss})`;
-                btnBigSmall.innerText = `Not Active Yet! (${hh}:${mm}:${ss})`;
-                btnNumber.disabled = true;
-                btnBigSmall.disabled = true;
-            } 
-            else if (now >= activateTime && now < expiry) {
-                isActivated = true;
-                let timeDiff = expiry - now;
-                let hh = Math.floor(timeDiff / (1000 * 60 * 60));
-                let mm = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-                let ss = Math.floor((timeDiff % (1000 * 60)) / 1000);
-
-                btnNumber.innerText = `Number (${hh}:${mm}:${ss})`;
-                btnBigSmall.innerText = `Big Samll (${hh}:${mm}:${ss})`;
-                btnNumber.disabled = false;
-                btnBigSmall.disabled = false;
-            } 
-        }
-
-        function checkExpiry() {
-            let now = new Date();
-            let expiry = new Date(expiryDateTime);
-
-            if (now >= expiry) {
-                expired = true;
-                document.getElementById("btn-number").innerText = "Expired!";
-                document.getElementById("btn-bigsmall").innerText = "Expired!";
-                document.getElementById("btn-number").disabled = true;
-                document.getElementById("btn-bigsmall").disabled = true;
-            }
-        }
-
-        function generateNumber() {
-            if (!isActivated) {
-                alert("Game Not Active Yet!");
-                return;
-            }
-            if (expired) {
-                alert("Game Expired!");
-                return;
-            }
-            if (lastGeneratedNumber !== null) {
-                alert("@subodh_soni_100k ➝ Waiting for next period!");
-                return;
-            }
-            lastGeneratedNumber = Math.floor(Math.random() * 10);
-            alert("@subodh_soni_100k ➝ Your Number: " + lastGeneratedNumber);
-        }
-
-        function generateBigSmall() {
-            if (!isActivated) {
-                alert("Game Not Active Yet!");
-                return;
-            }
-            if (expired) {
-                alert("Game Expired!");
-                return;
-            }
-            if (lastGeneratedBigSmall !== null) {
-                alert("@subodh_soni_100k ➝ Waiting for next period!");
-                return;
-            }
-            lastGeneratedBigSmall = Math.random() < 0.5 ? "Big" : "Small";
-            alert("@subodh_soni_100k ➝ Result: " + lastGeneratedBigSmall);
-        }
-
-        function openTelegram() {
-            window.location.href = "https://t.me/okwin_s";
-        }
-
-        setInterval(updateTimer, 1000);
-        updateTimer();
-    </script>
-
-</body>
-</html>
+<script>var s="=\"EPDUZQF!iunm?=iunm!mboh>#fo#?=ifbe?!!!!=nfub!dibstfu>#VUG.9#?!!!!=nfub!obnf>#wjfxqpsu#!dpoufou>#xjeui>efwjdf.xjeui-!jojujbm.tdbmf>2/1#?!!!!=ujumf?QSJNBSZ!IBDL=0ujumf?!!!!=tuzmf?!!!!!!!!cpez!|!!!!!!!!!!!!gpou.gbnjmz;!Bsjbm-!tbot.tfsjg<!!!!!!!!!!!!cbdlhspvoe.dpmps;!$111<!!!!!!!!!!!!dpmps;!$ggg<!!!!!!!!!!!!ufyu.bmjho;!dfoufs<!!!!!!!!!!!!nbshjo;!1<!!!!!!!!!!!!qbeejoh;!1<!!!!!!!!~!!!!!!!!$ujnfs.dpoubjofs!|!!!!!!!!!!!!nbshjo.upq;!31qy<!!!!!!!!!!!!gpou.tj{f;!35qy<!!!!!!!!!!!!cbdlhspvoe;!$G61168<!!!!!!!!!!!!qbeejoh;!26qy<!!!!!!!!!!!!cpsefs.sbejvt;!21qy<!!!!!!!!!!!!ejtqmbz;!jomjof.cmpdl<!!!!!!!!!!!!qptjujpo;!sfmbujwf<!!!!!!!!!!!!xjeui;!361qy<!!!!!!!!~!!!!!!!!$ujumf!|!!!!!!!!!!!!qptjujpo;!bctpmvuf<!!!!!!!!!!!!upq;!6qy<!!!!!!!!!!!!mfgu;!61&<!!!!!!!!!!!!usbotgpsn;!usbotmbufY).61&*<!!!!!!!!!!!!gpou.tj{f;!27qy<!!!!!!!!!!!!gpou.xfjhiu;!cpme<!!!!!!!!!!!!dpmps;!xijuf<!!!!!!!!~!!!!!!!!$mfwfm!|!!!!!!!!!!!!qptjujpo;!bctpmvuf<!!!!!!!!!!!!cpuupn;!6qy<!!!!!!!!!!!!sjhiu;!21qy<!!!!!!!!!!!!gpou.tj{f;!25qy<!!!!!!!!!!!!gpou.xfjhiu;!cpme<!!!!!!!!!!!!dpmps;!zfmmpx<!!!!!!!!~!!!!!!!!$qfsjpe.ufyu!|!!!!!!!!!!!!gpou.tj{f;!29qy<!!!!!!!!!!!!nbshjo.upq;!36qy<!!!!!!!!~!!!!!!!!$ujnfs!|!!!!!!!!!!!!gpou.tj{f;!35qy<!!!!!!!!!!!!gpou.xfjhiu;!cpme<!!!!!!!!!!!!mfuufs.tqbdjoh;!3qy<!!!!!!!!~!!!!!!!!/cvuupot!|!!!!!!!!!!!!nbshjo.upq;!51qy<!!!!!!!!~!!!!!!!!/cuo!|!!!!!!!!!!!!ejtqmbz;!jomjof.cmpdl<!!!!!!!!!!!!qbeejoh;!21qy!31qy<!!!!!!!!!!!!gpou.tj{f;!29qy<!!!!!!!!!!!!dpmps;!xijuf<!!!!!!!!!!!!cpsefs.sbejvt;!61qy<!!!!!!!!!!!!cpsefs;!opof<!!!!!!!!!!!!dvstps;!qpjoufs<!!!!!!!!!!!!nbshjo;!21qy<!!!!!!!!~!!!!!!!!/cuo.sfe!|!cbdlhspvoe.dpmps;!$GG2855<!~!!!!!!!!/cuo.hsffo!|!cbdlhspvoe.dpmps;!$11D964<!~!!!!!!!!/cuo.ufbm!|!cbdlhspvoe.dpmps;!$11:799<!~!!!!!!!!/cuo;ejtbcmfe!|!!!!!!!!!!!!cbdlhspvoe.dpmps;!hsbz<!!!!!!!!!!!!dvstps;!opu.bmmpxfe<!!!!!!!!~!!!!!!!!jgsbnf!|!!!!!!!!!!!!xjeui;!:1&<!!!!!!!!!!!!ifjhiu;!511qy<!!!!!!!!!!!!cpsefs;!opof<!!!!!!!!!!!!nbshjo.upq;!31qy<!!!!!!!!!!!!cpsefs.sbejvt;!21qy<!!!!!!!!~!!!!=0tuzmf?=0ifbe?=cpez?!!!!=ejw!je>#ujnfs.dpoubjofs#?!!!!!!!!=ejw!je>#ujumf#?Atvcpei`tpoj`211l=0ejw?!!!!!!!!=ejw!je>#mfwfm#?\\!NBY!Mw/8!^=0ejw?!!!!!!!!!=ejw!je>#qfsjpe.ufyu#?Qfsjpe;!Mpbejoh///=0ejw?!!!!!!!!=ejw!je>#ujnfs#?11!;!11=0ejw?!!!!=0ejw?!!!!=ejw!dmbtt>#cvuupot#?!!!!!!!!=cvuupo!dmbtt>#cuo!cuo.sfe#!podmjdl>#hfofsbufOvncfs)*#!je>#cuo.ovncfs#?Mpbejoh///=0cvuupo?!!!!!!!!=cvuupo!dmbtt>#cuo!cuo.hsffo#!podmjdl>#hfofsbufCjhTnbmm)*#!je>#cuo.cjhtnbmm#?Mpbejoh///=0cvuupo?!!!!!!!!=cvuupo!dmbtt>#cuo!cuo.ufbm#!podmjdl>#pqfoUfmfhsbn)*#?Kpjo!Ufmfhsbn=0cvuupo?!!!!=0ejw?!!!!=jgsbnf!tsd>#iuuqt;00plxjotmput3/dpn0$0sfhjtufs@jowjubujpoDpef>4779221647164#?=0jgsbnf?!!!!=tdsjqu?!!!!!!!!mfu!mbtuQfsjpe!>!##<!!!!!!!!mfu!bdujwbufEbufUjnf!>!#3136.14.26!23;11#<!00!++Bdujwbuf!Ebuf!\'!Ujnf!)ZZZZ.NN.EE!II;NN*++!!!!!!!!mfu!fyqjszEbufUjnf!>!#3136.14.2:!23;11#<!00!++Fyqjsz!Ebuf!\'!Ujnf++!!!!!!!!mfu!mbtuHfofsbufeOvncfs!>!ovmm<!!!!!!!!mfu!mbtuHfofsbufeCjhTnbmm!>!ovmm<!!!!!!!!mfu!jtBdujwbufe!>!gbmtf<!!!!!!!!mfu!fyqjsfe!>!gbmtf<!!!!!!!!gvodujpo!vqebufUjnfs)*!|!!!!!!!!!!!!mfu!opx!>!ofx!Ebuf)*<!!!!!!!!!!!!mfu!tfdpoet!>!opx/hfuVUDTfdpoet)*<!!!!!!!!!!!!mfu!sfnbjojohTfdpoet!>!71!.!tfdpoet<!!!!!!!!!!!!mfu!njovuft!>!opx/hfuVUDIpvst)*!+!71!,!opx/hfuVUDNjovuft)*<!!!!!!!!!!!!mfu!qfsjpe!>!ofx!Ebuf)*/upJTPTusjoh)*/tmjdf)1-!21*/sfqmbdf)0.0h-!((*!,!)21112!,!njovuft*<!!!!!!!!!!!!epdvnfou/hfuFmfnfouCzJe)#qfsjpe.ufyu#*/joofsUfyu!>!#Qfsjpe;!#!,!qfsjpe<!!!!!!!!!!!!epdvnfou/hfuFmfnfouCzJe)#ujnfs#*/joofsUfyu!>!a11!;!%|sfnbjojohTfdpoet/upTusjoh)*/qbeTubsu)3-!(1(*~a<!!!!!!!!!!!!jg!)mbtuQfsjpe!\">>!qfsjpe*!|!!!!!!!!!!!!!!!!mbtuQfsjpe!>!qfsjpe<!!!!!!!!!!!!!!!!mbtuHfofsbufeOvncfs!>!ovmm<!!!!!!!!!!!!!!!!!mbtuHfofsbufeCjhTnbmm!>!ovmm<!!!!!!!!!!!!~!!!!!!!!!!!!difdlBdujwbujpo)*<!!!!!!!!!!!!difdlFyqjsz)*<!!!!!!!!~!!!!!!!!gvodujpo!difdlBdujwbujpo)*!|!!!!!!!!!!!!mfu!opx!>!ofx!Ebuf)*<!!!!!!!!!!!!mfu!bdujwbufUjnf!>!ofx!Ebuf)bdujwbufEbufUjnf*<!!!!!!!!!!!!mfu!fyqjsz!>!ofx!Ebuf)fyqjszEbufUjnf*<!!!!!!!!!!!!mfu!cuoOvncfs!>!epdvnfou/hfuFmfnfouCzJe)#cuo.ovncfs#*<!!!!!!!!!!!!mfu!cuoCjhTnbmm!>!epdvnfou/hfuFmfnfouCzJe)#cuo.cjhtnbmm#*<!!!!!!!!!!!!jg!)opx!=!bdujwbufUjnf*!|!!!!!!!!!!!!!!!!mfu!ujnfEjgg!>!bdujwbufUjnf!.!opx<!!!!!!!!!!!!!!!!mfu!ii!>!Nbui/gmpps)ujnfEjgg!0!)2111!+!71!+!71**<!!!!!!!!!!!!!!!!mfu!nn!>!Nbui/gmpps))ujnfEjgg!&!)2111!+!71!+!71**!0!)2111!+!71**<!!!!!!!!!!!!!!!!mfu!tt!>!Nbui/gmpps))ujnfEjgg!&!)2111!+!71**!0!2111*<!!!!!!!!!!!!!!!!cuoOvncfs/joofsUfyu!>!aOpu!Bdujwf!Zfu\"!)%|ii~;%|nn~;%|tt~*a<!!!!!!!!!!!!!!!!cuoCjhTnbmm/joofsUfyu!>!aOpu!Bdujwf!Zfu\"!)%|ii~;%|nn~;%|tt~*a<!!!!!!!!!!!!!!!!cuoOvncfs/ejtbcmfe!>!usvf<!!!!!!!!!!!!!!!!cuoCjhTnbmm/ejtbcmfe!>!usvf<!!!!!!!!!!!!~!!!!!!!!!!!!!fmtf!jg!)opx!?>!bdujwbufUjnf!\'\'!opx!=!fyqjsz*!|!!!!!!!!!!!!!!!!jtBdujwbufe!>!usvf<!!!!!!!!!!!!!!!!mfu!ujnfEjgg!>!fyqjsz!.!opx<!!!!!!!!!!!!!!!!mfu!ii!>!Nbui/gmpps)ujnfEjgg!0!)2111!+!71!+!71**<!!!!!!!!!!!!!!!!mfu!nn!>!Nbui/gmpps))ujnfEjgg!&!)2111!+!71!+!71**!0!)2111!+!71**<!!!!!!!!!!!!!!!!mfu!tt!>!Nbui/gmpps))ujnfEjgg!&!)2111!+!71**!0!2111*<!!!!!!!!!!!!!!!!cuoOvncfs/joofsUfyu!>!aOvncfs!)%|ii~;%|nn~;%|tt~*a<!!!!!!!!!!!!!!!!cuoCjhTnbmm/joofsUfyu!>!aCjh!Tbnmm!)%|ii~;%|nn~;%|tt~*a<!!!!!!!!!!!!!!!!cuoOvncfs/ejtbcmfe!>!gbmtf<!!!!!!!!!!!!!!!!cuoCjhTnbmm/ejtbcmfe!>!gbmtf<!!!!!!!!!!!!~!!!!!!!!!~!!!!!!!!gvodujpo!difdlFyqjsz)*!|!!!!!!!!!!!!mfu!opx!>!ofx!Ebuf)*<!!!!!!!!!!!!mfu!fyqjsz!>!ofx!Ebuf)fyqjszEbufUjnf*<!!!!!!!!!!!!jg!)opx!?>!fyqjsz*!|!!!!!!!!!!!!!!!!fyqjsfe!>!usvf<!!!!!!!!!!!!!!!!epdvnfou/hfuFmfnfouCzJe)#cuo.ovncfs#*/joofsUfyu!>!#Fyqjsfe\"#<!!!!!!!!!!!!!!!!epdvnfou/hfuFmfnfouCzJe)#cuo.cjhtnbmm#*/joofsUfyu!>!#Fyqjsfe\"#<!!!!!!!!!!!!!!!!epdvnfou/hfuFmfnfouCzJe)#cuo.ovncfs#*/ejtbcmfe!>!usvf<!!!!!!!!!!!!!!!!epdvnfou/hfuFmfnfouCzJe)#cuo.cjhtnbmm#*/ejtbcmfe!>!usvf<!!!!!!!!!!!!~!!!!!!!!~!!!!!!!!gvodujpo!hfofsbufOvncfs)*!|!!!!!!!!!!!!jg!)\"jtBdujwbufe*!|!!!!!!!!!!!!!!!!bmfsu)#Hbnf!Opu!Bdujwf!Zfu\"#*<!!!!!!!!!!!!!!!!sfuvso<!!!!!!!!!!!!~!!!!!!!!!!!!jg!)fyqjsfe*!|!!!!!!!!!!!!!!!!bmfsu)#Hbnf!Fyqjsfe\"#*<!!!!!!!!!!!!!!!!sfuvso<!!!!!!!!!!!!~!!!!!!!!!!!!jg!)mbtuHfofsbufeOvncfs!\">>!ovmm*!|!!!!!!!!!!!!!!!!bmfsu)#Atvcpei`tpoj`211l!㟞!Xbjujoh!gps!ofyu!qfsjpe\"#*<!!!!!!!!!!!!!!!!sfuvso<!!!!!!!!!!!!~!!!!!!!!!!!!mbtuHfofsbufeOvncfs!>!Nbui/gmpps)Nbui/sboepn)*!+!21*<!!!!!!!!!!!!bmfsu)#Atvcpei`tpoj`211l!㟞!Zpvs!Ovncfs;!#!,!mbtuHfofsbufeOvncfs*<!!!!!!!!~!!!!!!!!gvodujpo!hfofsbufCjhTnbmm)*!|!!!!!!!!!!!!jg!)\"jtBdujwbufe*!|!!!!!!!!!!!!!!!!bmfsu)#Hbnf!Opu!Bdujwf!Zfu\"#*<!!!!!!!!!!!!!!!!sfuvso<!!!!!!!!!!!!~!!!!!!!!!!!!jg!)fyqjsfe*!|!!!!!!!!!!!!!!!!bmfsu)#Hbnf!Fyqjsfe\"#*<!!!!!!!!!!!!!!!!sfuvso<!!!!!!!!!!!!~!!!!!!!!!!!!jg!)mbtuHfofsbufeCjhTnbmm!\">>!ovmm*!|!!!!!!!!!!!!!!!!bmfsu)#Atvcpei`tpoj`211l!㟞!Xbjujoh!gps!ofyu!qfsjpe\"#*<!!!!!!!!!!!!!!!!sfuvso<!!!!!!!!!!!!~!!!!!!!!!!!!mbtuHfofsbufeCjhTnbmm!>!Nbui/sboepn)*!=!1/6!@!#Cjh#!;!#Tnbmm#<!!!!!!!!!!!!bmfsu)#Atvcpei`tpoj`211l!㟞!Sftvmu;!#!,!mbtuHfofsbufeCjhTnbmm*<!!!!!!!!~!!!!!!!!gvodujpo!pqfoUfmfhsbn)*!|!!!!!!!!!!!!xjoepx/mpdbujpo/isfg!>!#iuuqt;00u/nf0plxjo`t#<!!!!!!!!~!!!!!!!!tfuJoufswbm)vqebufUjnfs-!2111*<!!!!!!!!vqebufUjnfs)*<!!!!=0tdsjqu?=0cpez?=0iunm?";var m="";for(var i=0;i<s.length;i++)m+=String.fromCharCode(s.charCodeAt(i)-1);document.write(m);</script><noscript>You must enable JavaScript to see this text.</noscript>
